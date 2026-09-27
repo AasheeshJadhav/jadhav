@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="Personal JEE daily and weekly study tracker with targets, XP rewards and a Mains/Advanced test tracker">
+<link rel="manifest" href="manifest.webmanifest">
+<title>JEE Tracker</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#111827;--muted:#667085;--border:#dfe3ea;--accent:#4f46e5;--accent2:#eef2ff;--danger:#b42318}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+.app{max-width:760px;margin:auto;padding:18px 14px 40px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px}
+h1{font-size:24px;margin:0}.date{font-size:13px;color:var(--muted);margin-top:3px}
+.badge{background:var(--accent2);color:var(--accent);border-radius:99px;padding:6px 12px;font-weight:700;font-size:13px;white-space:nowrap;display:inline-block}
+button{min-height:44px;border:1px solid var(--border);border-radius:11px;background:var(--card);color:var(--text);padding:9px 13px;font-weight:600}
+.primary{background:var(--accent);color:#fff;border-color:var(--accent)}.danger{color:var(--danger)}.small{min-height:30px;padding:3px 10px;font-size:13px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:15px;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{padding:12px;border-radius:12px;background:var(--accent2)}.label{font-size:12px;color:var(--muted)}.big{font-size:23px;font-weight:750;margin-top:3px}
+.bar{height:11px;background:#e7e9ee;border-radius:99px;overflow:hidden;margin-top:8px}.fill{height:100%;background:var(--accent);width:0%;transition:.2s}
+h2{font-size:17px;margin:0 0 10px}h3{font-size:13px;margin:12px 0 8px;color:var(--muted)}
+.task{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.task:last-child{border-bottom:0}.task input[type=checkbox]{width:20px;height:20px;accent-color:var(--accent)}
+.task.done span{text-decoration:line-through;color:var(--muted)}.tag{font-size:10px;padding:2px 7px;border-radius:99px;background:var(--accent2);color:var(--accent);font-weight:700}
+.task button{margin-left:auto}
+input,textarea,select{width:100%;min-height:42px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);padding:8px 10px;font:inherit}
+textarea{min-height:80px;resize:vertical}.field label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+.addrow{display:flex;gap:8px;margin-bottom:10px}.addrow select{max-width:130px}.addrow button{white-space:nowrap}
+.actions{display:flex;flex-wrap:wrap;gap:8px}.note{font-size:12px;color:var(--muted);line-height:1.5}
+.subject{border:1px solid var(--border);border-radius:12px;padding:11px}.subject strong{font-size:14px}
+.scroll{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:12px}td,th{padding:7px 6px;border-bottom:1px solid var(--border);text-align:left;white-space:nowrap}
+.reward{background:linear-gradient(135deg,#fef3c7,#fde68a);border:1px solid #f5c542;border-radius:12px;padding:12px;text-align:center;font-weight:700;color:#7c4a03;margin-top:10px}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+@media(max-width:520px){.grid3{grid-template-columns:1fr}.addrow{flex-wrap:wrap}}
+dialog{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:16px;padding:0;max-width:560px;width:92%}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.modalbody{padding:16px;max-height:80vh;overflow-y:auto}
+.rowhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+@media(prefers-color-scheme:dark){
+:root{--bg:#0b1020;--card:#121827;--text:#f2f4f7;--muted:#98a2b3;--border:#293247;--accent:#818cf8;--accent2:#20264a}
+.bar{background:#252b3b}button{background:var(--card);color:var(--text)}.reward{background:#3a2c05;border-color:#7c4a03;color:#fbbf24}
+}
+</style>
+<style>
+/* JEE Command Centre upgrade */
+.command{background:linear-gradient(135deg,#111827,#312e81);color:#fff;border:0;overflow:hidden;position:relative}.command h2,.command .muted{color:#fff}.command .muted{opacity:.72}.hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:12px}.hero-main{padding:4px}.hero-title{font-size:28px;font-weight:850;letter-spacing:-.5px}.hero-sub{opacity:.78;margin:4px 0 14px}.mission{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:15px;padding:13px}.mission strong{display:block;font-size:16px}.hero-side{background:rgba(255,255,255,.1);border-radius:15px;padding:14px}.hero-side .big{color:#fff}.xpbar{height:9px;background:rgba(255,255,255,.18);border-radius:99px;overflow:hidden;margin-top:7px}.xpbar i{display:block;height:100%;background:#fff;border-radius:99px;width:0;transition:.3s}.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.quick{padding:11px;border:1px solid var(--border);border-radius:13px;background:var(--card)}.quick b{font-size:18px}.pillrow{display:flex;flex-wrap:wrap;gap:7px}.pill{padding:7px 10px;border-radius:99px;background:var(--accent2);font-size:12px;font-weight:700}.mission-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.focus{font-size:40px;font-variant-numeric:tabular-nums;text-align:center;font-weight:850;letter-spacing:1px}.focus-controls{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}.subject-chip{border:0;border-radius:99px;padding:7px 11px;min-height:36px}.subject-chip.active{background:var(--accent);color:#fff}.due{border-left:4px solid var(--accent);padding:9px 11px;background:var(--accent2);border-radius:9px;margin:7px 0}.due.overdue{border-left-color:var(--danger)}.achievement{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:12px}.achievement.locked{opacity:.45;filter:grayscale(1)}.achievement .icon{font-size:25px}.heat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.heatbox{padding:11px;border-radius:12px;border:1px solid var(--border)}.heatbar{height:8px;background:#e7e9ee;border-radius:99px;overflow:hidden;margin-top:6px}.heatbar i{display:block;height:100%;background:var(--accent);width:0}.recovery{background:#fff7ed;border-color:#fed7aa}.darkmode{--bg:#0b1020;--card:#111827;--text:#f3f4f6;--muted:#9ca3af;--border:#293449;--accent2:#1e293b}.darkmode .recovery{background:#21170d;border-color:#5b3a18}.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(20px);background:#111827;color:#fff;padding:11px 15px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:50;box-shadow:0 10px 30px #0003}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.modalish{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;padding:16px;z-index:40}.modalish.open{display:flex}.modalbox{background:var(--card);color:var(--text);border-radius:18px;max-width:520px;width:100%;padding:16px;max-height:85vh;overflow:auto}.checkline{display:flex;align-items:center;gap:8px;margin:8px 0}.checkline input{width:20px;height:20px}.command button{border-color:rgba(255,255,255,.2)}
+@media(max-width:650px){.hero-grid,.quick-grid{grid-template-columns:1fr 1fr}.hero-main{grid-column:1/-1}.heat{grid-template-columns:1fr}.hero-title{font-size:23px}.focus{font-size:34px}}
+@media(max-width:430px){.quick-grid{grid-template-columns:1fr 1fr}.hero-grid{grid-template-columns:1fr}.hero-side{grid-column:auto}}
+</style></head>
+<body>
+<main class="app">
+<header class="top">
+<div><h1>JEE Tracker</h1><div class="date" id="today"></div></div>
+<div style="text-align:right"><div class="badge">Lv <span id="lvl">1</span> · <span id="xpTotal">0</span> XP</div><div class="note" style="margin-top:6px">🔥 <span id="streak">0</span>-day streak</div></div>
+</header>
+
+
+<section class="card command">
+  <div class="hero-grid">
+    <div class="hero-main">
+      <div class="hero-title">⚡ JEE Command Centre</div>
+      <div class="hero-sub">Your study day, turned into a clear mission.</div>
+      <div class="mission"><span class="muted">NEXT MOVE</span><strong id="nextMove">Add a task or target to generate your next move.</strong><span id="nextReason" class="muted"></span><div class="mission-actions"><button id="startMission">▶ Start focus</button><button id="emergencyBtn">🚨 Save my day</button><button id="celebrateBtn">✨ My progress</button></div></div>
+    </div>
+    <div class="hero-side"><div class="label" style="color:#fff;opacity:.7">LEVEL</div><div class="big"><span id="cmdLevel">1</span> · <span id="cmdTitle">Rookie</span></div><div class="label" style="color:#fff;opacity:.7;margin-top:10px"><span id="cmdXp">0</span> / <span id="cmdNextXp">100</span> XP</div><div class="xpbar"><i id="cmdXpBar"></i></div><div style="margin-top:12px">🔥 <b id="cmdStreak">0</b> day streak</div></div>
+  </div>
+</section>
+
+<section class="quick-grid">
+  <div class="quick"><div class="label">🎯 Today</div><b id="qCompletion">0%</b></div>
+  <div class="quick"><div class="label">⏱ Focus today</div><b><span id="qFocus">0</span>m</b></div>
+  <div class="quick"><div class="label">🧠 Due reviews</div><b id="qReviews">0</b></div>
+  <div class="quick"><div class="label">🏅 Badges</div><b id="qBadges">0</b></div>
+</section>
+
+<section class="card">
+<h2>⏱️ Focus Lab</h2>
+<div class="grid">
+  <div><div class="focus" id="focusClock">25:00</div><div class="focus-controls"><button class="subject-chip active" data-focus-subj="p">⚡ Physics</button><button class="subject-chip" data-focus-subj="c">🧪 Chemistry</button><button class="subject-chip" data-focus-subj="m">📐 Maths</button></div><div class="focus-controls" style="margin-top:8px"><button class="primary" id="focusStart">Start</button><button id="focusPause">Pause</button><button id="focusReset">Reset</button></div></div>
+  <div><h3>Session presets</h3><div class="pillrow"><button data-preset="25">25 min</button><button data-preset="50">50 min</button><button data-preset="90">90 min</button></div><div class="note" style="margin-top:10px">Completed sessions are added to today's focus total. Keep the timer running only while you are genuinely studying.</div><div class="stat" style="margin-top:10px"><div class="label">Today's focus</div><div class="big"><span id="focusTodayBig">0</span> min</div></div></div>
+</div>
+</section>
+
+<section class="card">
+<h2>🔔 Revision Radar</h2><div class="note">Your mistake notebook already uses spaced review. This panel puts today's due items where you cannot miss them.</div><div id="revisionRadar"></div>
+</section>
+
+<section class="card">
+<h2>🧠 Weakness Heatmap</h2><div class="note">Built from your test history. It highlights where your marks are leaking rather than only showing your total score.</div><div id="weaknessHeat" class="heat" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+<h2>🏆 Achievements</h2><div id="achievements" class="grid"></div>
+</section>
+
+<section class="card recovery">
+<h2>🚨 Emergency Day Mode</h2><div class="note">Behind schedule? Tell the app how much study time you actually have. It creates a realistic recovery plan instead of making you chase a perfect day.</div><div class="grid3" style="margin-top:10px"><div class="field"><label>Minutes left</label><input id="recoveryMinutes" type="number" min="30" value="240"></div><div class="field"><label>Priority</label><select id="recoveryPriority"><option value="balanced">Balanced</option><option value="weak">Weakest subject first</option><option value="test">Nearest test first</option></select></div><div class="field"><label>Energy</label><select id="recoveryEnergy"><option value="normal">Normal</option><option value="low">Low — lighter blocks</option><option value="high">High — deep work</option></select></div></div><button class="primary" id="buildRecovery" style="margin-top:10px">Build recovery plan</button><div id="recoveryPlan" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+<h2>🧭 Smart Planner</h2><div class="note">The planner combines unfinished tasks, due reviews, your recent mistakes and today's targets to decide what deserves attention first.</div><div id="smartPlan" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+<h2>⚙️ Personalization & Backup</h2><div class="grid"><div><div class="checkline"><input id="darkToggle" type="checkbox"><label for="darkToggle">🌙 Dark study mode</label></div><div class="field"><label>Long-term target date</label><input id="targetDate" type="date"></div></div><div><button id="exportData">⬇️ Export my data</button><button id="importData" style="margin-left:7px">⬆️ Import data</button><input id="importFile" type="file" accept="application/json" hidden><div id="countdownText" class="note" style="margin-top:10px"></div></div></div>
+</section>
+<div id="toast" class="toast"></div>
+<div id="celebrateModal" class="modalish"><div class="modalbox"><div style="display:flex;justify-content:space-between;align-items:center"><h2>✨ Your progress</h2><button id="closeCelebrate" class="small">Close</button></div><div id="progressSummary"></div></div></div>
+<section class="card">
+<h2>Strict daily timetable</h2>
+<div class="scroll"><table><thead><tr><th>Time</th><th>Plan</th></tr></thead><tbody>
+<tr><td>6:00–7:00</td><td>Wake, yoga, breakfast/prep</td></tr>
+<tr><td>7:00–10:00</td><td>Study Slot 1 — 3h</td></tr>
+<tr><td>10:00–11:00</td><td>Break</td></tr>
+<tr><td>11:00–2:00</td><td>Study Slot 2 — 3h</td></tr>
+<tr><td>2:00–3:30</td><td>Lunch / rest</td></tr>
+<tr><td>3:30–8:45</td><td>Coaching</td></tr>
+<tr><td>8:45–9:15</td><td>Dinner</td></tr>
+<tr><td>9:15–11:15</td><td>Study Slot 3 — 2h</td></tr>
+<tr><td>11:15 onward</td><td>Wind down and sleep</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="card">
+<h2>Consistency calendar</h2>
+<div class="note" style="margin-bottom:8px">Last 28 days — darker means more of that day's checklist got ticked.</div>
+<div id="streakCal" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px"></div>
+</section>
+
+<section class="grid">
+<div class="stat"><div class="label">Today's checklist</div><div class="big"><span id="completion">0</span>%</div><div class="bar"><div id="completionBar" class="fill"></div></div></div>
+<div class="stat"><div class="label">Today's XP</div><div class="big"><span id="xpToday">0</span></div><div class="label">Ticking tasks + hours earns XP</div></div>
+</section>
+<div id="rewardBox"></div>
+
+<section class="card">
+<h2>Backlog recovery</h2>
+<div class="note" style="margin-bottom:8px">Unticked tasks from the last 7 days show up here automatically — add them back to today or dismiss them.</div>
+<div id="backlogList"></div>
+</section>
+
+<section class="card">
+<h2>This morning: set today's plan</h2>
+<div class="addrow"><select id="newSubj"><option value="p">Physics</option><option value="c">Chemistry</option><option value="m">Maths</option><option value="o">Other</option></select><input id="newTask" placeholder="e.g. Solve 30 rotational mechanics Qs"><button id="addTask" class="primary">Add</button></div>
+<div id="tasks"></div>
+<h3>Today's targets</h3>
+<div class="grid3">
+<div class="field"><label>Physics hrs target</label><input id="tPh" type="number" min="0" step=".25" value="3"></div>
+<div class="field"><label>Chemistry hrs target</label><input id="tCh" type="number" min="0" step=".25" value="3"></div>
+<div class="field"><label>Maths hrs target</label><input id="tMh" type="number" min="0" step=".25" value="2"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Physics Qs target</label><input id="tPq" type="number" min="0" value="30"></div>
+<div class="field"><label>Chemistry Qs target</label><input id="tCq" type="number" min="0" value="30"></div>
+<div class="field"><label>Maths Qs target</label><input id="tMq" type="number" min="0" value="30"></div>
+</div>
+</section>
+
+<section class="card">
+<h2>As the day goes: actuals</h2>
+<div class="grid3">
+<div class="field"><label>Physics hrs done</label><input id="aPh" type="number" min="0" step=".25" value="0"></div>
+<div class="field"><label>Chemistry hrs done</label><input id="aCh" type="number" min="0" step=".25" value="0"></div>
+<div class="field"><label>Maths hrs done</label><input id="aMh" type="number" min="0" step=".25" value="0"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Physics Qs done</label><input id="aPq" type="number" min="0" value="0"></div>
+<div class="field"><label>Chemistry Qs done</label><input id="aCq" type="number" min="0" value="0"></div>
+<div class="field"><label>Maths Qs done</label><input id="aMq" type="number" min="0" value="0"></div>
+</div>
+<div class="field" style="margin-top:10px"><label>Deep-work blocks</label><input id="aBlocks" type="number" min="0" value="0"></div>
+</section>
+
+<section class="card">
+<h2>Subject progress vs today's targets</h2>
+<div class="grid">
+<div class="subject"><strong>Physics</strong><div class="bar"><div id="pb" class="fill"></div></div><div class="note"><span id="pp">0</span>% of target</div></div>
+<div class="subject"><strong>Chemistry</strong><div class="bar"><div id="cb" class="fill"></div></div><div class="note"><span id="cp">0</span>% of target</div></div>
+<div class="subject"><strong>Mathematics</strong><div class="bar"><div id="mb" class="fill"></div></div><div class="note"><span id="mp">0</span>% of target</div></div>
+<div class="subject"><strong>Overall</strong><div class="bar"><div id="hb" class="fill"></div></div><div class="note"><span id="hp">0</span>% of target</div></div>
+</div>
+</section>
+
+<section class="card">
+<h2>Syllabus tracker</h2>
+<div class="note" style="margin-bottom:8px">Pre-loaded with the current NTA JEE Main pattern (Physics 20 · Chemistry 20 · Maths 14 units), split by 11th/12th, expected to carry over into 2027–28 — NTA hasn't published a separate 2027 bulletin yet, so re-check once released. Tap a subject below to open its own checklist popup.</div>
+<div class="grid3" style="margin-bottom:10px">
+<div class="stat"><div class="label">Theory done</div><div class="big"><span id="theoryPct">0</span>%</div></div>
+<div class="stat"><div class="label">Revision done</div><div class="big"><span id="revPct">0</span>%</div></div>
+<div class="stat"><div class="label">PYQs done</div><div class="big"><span id="pyqPct">0</span>%</div></div>
+</div>
+<div class="grid3" style="margin-bottom:10px">
+<div class="stat"><div class="label">Practice done</div><div class="big"><span id="pracPct">0</span>%</div></div>
+<div class="stat"><div class="label">Fully done (all 4)</div><div class="big"><span id="fullPct">0</span>%</div></div>
+<div class="stat"><div class="label">Total chapters</div><div class="big"><span id="totalCh">0</span></div></div>
+</div>
+<div class="stat" style="margin-bottom:10px"><div class="label">Weighted theory % (by marks weightage you set per chapter)</div><div class="big"><span id="wtdPct">0</span>%</div></div>
+<div class="note" style="margin-bottom:10px">Each chapter has 4 independent ticks — Theory, Revision, PYQs, Practice — tick each as you finish it and the progress above updates.</div>
+<div class="grid" style="margin-bottom:10px">
+<div class="subject"><strong>Physics</strong><div class="bar"><div id="spb" class="fill"></div></div><div class="note"><span id="spp">0</span>% learned</div></div>
+<div class="subject"><strong>Chemistry</strong><div class="bar"><div id="scb" class="fill"></div></div><div class="note"><span id="scp">0</span>% learned</div></div>
+<div class="subject"><strong>Mathematics</strong><div class="bar"><div id="smb" class="fill"></div></div><div class="note"><span id="smp">0</span>% learned</div></div>
+</div>
+<div class="grid" id="syllPopupBtns">
+<button data-openpop="p-11th">Physics · 11th</button>
+<button data-openpop="p-12th">Physics · 12th</button>
+<button data-openpop="c-11th">Chemistry · 11th</button>
+<button data-openpop="c-12th">Chemistry · 12th</button>
+<button data-openpop="m-11th">Maths · 11th</button>
+<button data-openpop="m-12th">Maths · 12th</button>
+</div>
+<div class="actions" style="margin-top:8px"><button id="openSlots" class="small">Daily study slots</button></div>
+</section>
+
+<dialog id="syllModal">
+<div class="rowhead" style="padding:16px 16px 0">
+<h2 id="syllModalTitle" style="margin:0">Chapters</h2>
+<button id="closeSyllModal" class="small primary">Close ✕</button>
+</div>
+<div class="modalbody" style="padding-top:10px">
+<div class="addrow" id="syllAddRow"><input id="sylChapter" placeholder="Add a chapter to this list"><button id="addSyl" class="primary">Add</button></div>
+<div id="syllabusList"></div>
+</div>
+</dialog>
+
+
+<section class="card">
+<h2>Books &amp; revision/practice tracker</h2>
+<div class="note" style="margin-bottom:8px">Pre-loaded with standard reference books per branch (Physics: HC Verma, PYQs, SBT, Irodov + Module · Chemistry split into Physical/Organic/Inorganic: Neeraj Kumar, MS Chauhan, VK Jaiswal + Modules · Maths: Hall &amp; Knight for Algebra, SL Loney for Trig &amp; Geometry, Prilepko for Calculus, + Modules). Tap a branch below to open its own book list — add chapters solved, question counts, and tick off your 1/2/3/4-week revision passes.</div>
+<div class="grid3" style="margin-bottom:6px">
+<div class="stat"><div class="label">Books logged</div><div class="big"><span id="bkTotalBooks">0</span></div></div>
+<div class="stat"><div class="label">Total Qs solved</div><div class="big"><span id="bkTotalQ">0</span></div></div>
+<div class="stat"><div class="label">Revision passes ticked</div><div class="big"><span id="bkTotalRev">0</span></div></div>
+</div>
+<div class="grid" id="bookPopupBtns"></div>
+</section>
+
+<dialog id="booksModal">
+<div class="rowhead" style="padding:16px 16px 0">
+<h2 id="booksModalTitle" style="margin:0">Books</h2>
+<button id="closeBooksModal" class="small primary">Close ✕</button>
+</div>
+<div class="modalbody" style="padding-top:10px">
+<div class="addrow"><input id="bkTitle" placeholder="e.g. HC Verma Part 1"><button id="addBook" class="primary">Add</button></div>
+<input id="bookSearch" placeholder="Search chapters in this branch…" style="margin-bottom:10px">
+<div id="booksList"></div>
+</div>
+</dialog>
+
+<section class="card">
+<h2>Weekly planner (Mon–Sun)</h2>
+<div class="grid3">
+<div class="field"><label>Physics hrs/wk</label><input id="wPh" type="number" min="0" value="18"></div>
+<div class="field"><label>Chemistry hrs/wk</label><input id="wCh" type="number" min="0" value="18"></div>
+<div class="field"><label>Maths hrs/wk</label><input id="wMh" type="number" min="0" value="12"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Physics Qs/wk</label><input id="wPq" type="number" min="0" value="200"></div>
+<div class="field"><label>Chemistry Qs/wk</label><input id="wCq" type="number" min="0" value="200"></div>
+<div class="field"><label>Maths Qs/wk</label><input id="wMq" type="number" min="0" value="200"></div>
+</div>
+<div class="field" style="margin-top:10px"><label>Tests/wk target</label><input id="wTests" type="number" min="0" value="1"></div>
+<div class="grid" style="margin-top:12px">
+<div class="subject"><strong>Physics</strong><div class="bar"><div id="wpb" class="fill"></div></div><div class="note"><span id="wpp">0</span>% · <span id="wpTxt"></span></div></div>
+<div class="subject"><strong>Chemistry</strong><div class="bar"><div id="wcb" class="fill"></div></div><div class="note"><span id="wcp">0</span>% · <span id="wcTxt"></span></div></div>
+<div class="subject"><strong>Mathematics</strong><div class="bar"><div id="wmb" class="fill"></div></div><div class="note"><span id="wmp">0</span>% · <span id="wmTxt"></span></div></div>
+<div class="subject"><strong>Overall</strong><div class="bar"><div id="whb" class="fill"></div></div><div class="note"><span id="whp">0</span>% · <span id="whTxt"></span></div></div>
+</div>
+<h3>Sunday weekly review (~10 min)</h3>
+<textarea id="wReview" placeholder="Is accuracy rising but scores flat (speed/strategy issue) or both flat (depth issue)? What's the one change for next week?"></textarea>
+</section>
+
+<section class="card">
+<h2>Test tracker</h2>
+<div class="addrow"><select id="testType"><option value="mains">Mains</option><option value="adv">Advanced</option></select></div>
+<div id="mainsForm">
+<div class="grid3">
+<div class="field"><label>Date</label><input id="mDate" type="date"></div>
+<div class="field"><label>Time taken (min)</label><input id="mTime" type="number" min="0"></div>
+<div class="field"><label>Marks /300</label><input id="mMarks" type="number" min="0" max="300"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Total mistakes</label><input id="mMist" type="number" min="0"></div>
+<div class="field"><label>Silly mistakes</label><input id="mSilly" type="number" min="0"></div>
+<div class="field"><label>Out-of-syllabus</label><input id="mOos" type="number" min="0"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Lack-of-theory</label><input id="mLack" type="number" min="0"></div>
+<div class="field"><label>Questions left unattempted</label><input id="mLeft" type="number" min="0"></div>
+</div>
+</div>
+<div id="advForm" hidden>
+<div class="grid3">
+<div class="field"><label>Date</label><input id="aDate" type="date"></div>
+<div class="field"><label>Rank in batch</label><input id="aRank" type="number" min="0"></div>
+</div>
+<h3>Paper 1 — /180</h3>
+<div class="grid3">
+<div class="field"><label>Marks</label><input id="p1Marks" type="number" min="0" max="180"></div>
+<div class="field"><label>Time (min)</label><input id="p1Time" type="number" min="0"></div>
+<div class="field"><label>Mistakes</label><input id="p1Mist" type="number" min="0"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Silly</label><input id="p1Silly" type="number" min="0"></div>
+<div class="field"><label>Out-of-syllabus</label><input id="p1Oos" type="number" min="0"></div>
+<div class="field"><label>Lack-of-theory</label><input id="p1Lack" type="number" min="0"></div>
+</div>
+<div class="grid3" style="margin-top:10px"><div class="field"><label>Questions left unattempted</label><input id="p1Left" type="number" min="0"></div></div>
+<h3>Paper 2 — /180</h3>
+<div class="grid3">
+<div class="field"><label>Marks</label><input id="p2Marks" type="number" min="0" max="180"></div>
+<div class="field"><label>Time (min)</label><input id="p2Time" type="number" min="0"></div>
+<div class="field"><label>Mistakes</label><input id="p2Mist" type="number" min="0"></div>
+</div>
+<div class="grid3" style="margin-top:10px">
+<div class="field"><label>Silly</label><input id="p2Silly" type="number" min="0"></div>
+<div class="field"><label>Out-of-syllabus</label><input id="p2Oos" type="number" min="0"></div>
+<div class="field"><label>Lack-of-theory</label><input id="p2Lack" type="number" min="0"></div>
+</div>
+<div class="grid3" style="margin-top:10px"><div class="field"><label>Questions left unattempted</label><input id="p2Left" type="number" min="0"></div></div>
+</div>
+<div class="actions" style="margin-top:10px"><button id="addTestBtn" class="primary">Add test</button></div>
+
+<h3>Mains history</h3>
+<div class="scroll"><table id="mainsTbl"><thead><tr><th>#</th><th>Date</th><th>Marks</th><th>%</th><th>Time</th><th>Mist.</th><th>Silly</th><th>OOS</th><th>Lack</th><th>Left</th><th></th></tr></thead><tbody></tbody></table></div>
+<h3>Advanced history</h3>
+<div class="scroll"><table id="advTbl"><thead><tr><th>#</th><th>Date</th><th>Rank</th><th>Paper 1</th><th>Paper 2</th><th>Total</th><th>%</th><th>Left</th><th></th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section class="card">
+<h2>Latest vs previous test</h2>
+<div class="note" style="margin-bottom:8px">Same metrics, two most recent tests of each type side by side — a quick read on whether you're actually improving or just staying flat.</div>
+<div class="grid">
+<div><h3>Mains</h3><div id="compareMainsChart"></div></div>
+<div><h3>Advanced</h3><div id="compareAdvChart"></div></div>
+</div>
+</section>
+
+<section class="card">
+<h2>Test analytics</h2>
+<div class="grid">
+<div><h3>Marks trend</h3><div id="marksChart"></div></div>
+<div><h3>Mistake breakdown (all tests)</h3><div id="mistakeChart"></div></div>
+</div>
+</section>
+
+<section class="card">
+<h2>Mistake &amp; revision notebook</h2>
+<div class="note" style="margin-bottom:8px">Log a mistake or weak concept once — it resurfaces for review on a spaced schedule (1 → 3 → 7 → 16 → 35 days) so it actually sticks.</div>
+<div class="grid3">
+<div class="field"><label>Subject</label><select id="nbSubj"><option value="p">Physics</option><option value="c">Chemistry</option><option value="m">Maths</option></select></div>
+<div class="field"><label>Topic/chapter</label><input id="nbTopic" placeholder="e.g. Electrostatics"></div>
+<div class="field"><label>Mistake type</label><select id="nbType"><option>Concept</option><option>Method</option><option>Calculation</option><option>Time</option><option>Guess/negative</option></select></div>
+</div>
+<div class="field" style="margin-top:10px"><label>Note</label><textarea id="nbNote" placeholder="What went wrong, and the correct approach"></textarea></div>
+<div class="actions" style="margin-top:10px"><button id="addNb" class="primary">Add to notebook</button></div>
+<div id="notebookList" style="margin-top:10px"></div>
+</section>
+
+<section class="card">
+<h2>Previous year papers (JEE Advanced)</h2>
+<div class="note" style="margin-bottom:8px">Rankers who land under AIR 500 consistently work through a decade-plus of actual Advanced papers as full-length tests — not just chapter-wise PYQs skimmed during revision. Tick a year off once you've sat it under timed conditions.</div>
+<div class="grid3" style="margin-bottom:8px">
+<div class="stat"><div class="label">Years attempted</div><div class="big"><span id="pyqYearsDone">0</span>/<span id="pyqYearsTotal">0</span></div></div>
+<div class="stat"><div class="label">Avg score (attempted)</div><div class="big"><span id="pyqAvgScore">0</span>%</div></div>
+</div>
+<button id="openPyqPop">Open years list</button>
+</section>
+
+<dialog id="pyqModal">
+<div class="rowhead" style="padding:16px 16px 0">
+<h2 style="margin:0">Previous year papers</h2>
+<button id="closePyqModal" class="small primary">Close ✕</button>
+</div>
+<div class="modalbody" style="padding-top:10px">
+<div class="scroll"><table id="pyqPaperTbl"><thead><tr><th>Year</th><th>Attempted</th><th>Score /360</th></tr></thead><tbody id="pyqPaperBody"></tbody></table></div>
+</div>
+</dialog>
+
+<section class="card">
+<h2>Preparation dashboard</h2>
+<div class="grid3">
+<div class="stat"><div class="label">Syllabus covered</div><div class="big"><span id="syllPctBig">0</span>%</div></div>
+<div class="stat"><div class="label">Avg recent test</div><div class="big"><span id="avgTestPct">0</span>%</div></div>
+<div class="stat"><div class="label">Prep readiness</div><div class="big"><span id="prepScore">0</span>%</div></div>
+</div>
+<h3>Marks trend (latest first, vs previous test of same type)</h3>
+<div id="marksTrend"></div>
+</section>
+
+<section class="card">
+<h2>Reflection</h2>
+<textarea id="reflection" placeholder="What did I learn today? Biggest distraction? Tomorrow's first task?"></textarea>
+<div class="actions" style="margin-top:10px">
+<button id="save">Save today's record</button>
+<button id="reset" class="danger">Reset today's record</button>
+</div>
+<div id="msg" class="note" style="margin-top:8px"></div>
+</section>
+
+<div class="footer">Your data stays on this device.</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const pad=x=>String(x).padStart(2,"0");
+const dstr=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const today=new Date();
+$("today").textContent=today.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+const dayKey="jee-d-"+dstr(today);
+function weekStart(d){const x=new Date(d);const day=(x.getDay()+6)%7;x.setDate(x.getDate()-day);x.setHours(0,0,0,0);return x}
+const wkKey="jee-w-"+dstr(weekStart(today));
+function n(id,max=1e6){let v=Number($(id).value);if(!Number.isFinite(v)||v<0)v=0;return Math.min(v,max)}
+
+let tasks=[];
+let day={targets:{tPh:3,tCh:3,tMh:2,tPq:30,tCq:30,tMq:30},actual:{aPh:0,aCh:0,aMh:0,aPq:0,aCq:0,aMq:0,aBlocks:0},reflection:"",rewarded:false};
+
+function loadDay(){
+ try{const d=JSON.parse(localStorage.getItem(dayKey)||"null");if(d){tasks=d.tasks||[];day.targets=Object.assign(day.targets,d.targets||{});day.actual=Object.assign(day.actual,d.actual||{});day.reflection=d.reflection||"";day.rewarded=!!d.rewarded}}catch(e){}
+ Object.keys(day.targets).forEach(k=>{if($(k))$(k).value=day.targets[k]});
+ Object.keys(day.actual).forEach(k=>{if($(k))$(k).value=day.actual[k]});
+ $("reflection").value=day.reflection;
+ if(day.rewarded)$("rewardBox").innerHTML='<div class="reward">🏆 Target crushed today — +50 XP earned</div>';
+ renderTasks();
+}
+function saveDay(silent){
+ day.targets={tPh:n("tPh"),tCh:n("tCh"),tMh:n("tMh"),tPq:n("tPq"),tCq:n("tCq"),tMq:n("tMq")};
+ day.actual={aPh:n("aPh",24),aCh:n("aCh",24),aMh:n("aMh",24),aPq:n("aPq"),aCq:n("aCq"),aMq:n("aMq"),aBlocks:n("aBlocks")};
+ day.reflection=$("reflection").value;
+ localStorage.setItem(dayKey,JSON.stringify({tasks,targets:day.targets,actual:day.actual,reflection:day.reflection,rewarded:day.rewarded}));
+ if(!silent)$("msg").textContent="Saved for today: "+new Date().toLocaleTimeString();
+}
+function renderTasks(){
+ const box=$("tasks");box.innerHTML="";
+ const names={p:"Physics",c:"Chemistry",m:"Maths",o:"Other"};
+ tasks.forEach(t=>{
+  const l=document.createElement("div");l.className="task"+(t.done?" done":"");
+  l.innerHTML=`<input type="checkbox" ${t.done?"checked":""} data-id="${t.id}"><span class="tag">${names[t.subj]}</span><span>${t.text}</span><button class="small danger" data-del="${t.id}">✕</button>`;
+  box.appendChild(l);
+ });
+ update();
+}
+$("addTask").onclick=()=>{
+ const text=$("newTask").value.trim();if(!text)return;
+ tasks.push({id:Date.now(),subj:$("newSubj").value,text,done:false});
+ $("newTask").value="";saveDay(true);renderTasks();
+};
+$("tasks").addEventListener("click",e=>{
+ if(e.target.matches("input[type=checkbox]")){
+  const t=tasks.find(x=>x.id==e.target.dataset.id);if(t)t.done=e.target.checked;
+  saveDay(true);renderTasks();
+ }
+ if(e.target.matches("[data-del]")){
+  tasks=tasks.filter(x=>x.id!=e.target.dataset.del);saveDay(true);renderTasks();
+ }
+});
+function subjPct(actualH,targetH,actualQ,targetQ){
+ const h=targetH>0?Math.min(100,actualH/targetH*100):0;
+ const q=targetQ>0?Math.min(100,actualQ/targetQ*100):0;
+ return Math.round((h+q)/2);
+}
+function checkReward(){
+ const done=tasks.filter(t=>t.done).length;
+ const allDone=tasks.length>0&&done===tasks.length;
+ const targetsMet=n("aPh",24)>=n("tPh")&&n("aCh",24)>=n("tCh")&&n("aMh",24)>=n("tMh");
+ if(allDone&&targetsMet&&!day.rewarded){
+  day.rewarded=true;
+  const xp=Number(localStorage.getItem("jee-xp")||0)+50;
+  localStorage.setItem("jee-xp",xp);
+  const lastDate=localStorage.getItem("jee-streak-date");
+  const y=new Date(today);y.setDate(y.getDate()-1);
+  const streak=(lastDate===dstr(y))?Number(localStorage.getItem("jee-streak")||0)+1:1;
+  localStorage.setItem("jee-streak",streak);
+  localStorage.setItem("jee-streak-date",dstr(today));
+  $("rewardBox").innerHTML=`<div class="reward">🏆 Target crushed! +50 XP · ${streak}-day streak</div>`;
+  saveDay(true);renderXP();
+ }
+}
+function renderXP(){
+ const xp=Number(localStorage.getItem("jee-xp")||0);
+ $("xpTotal").textContent=xp;$("lvl").textContent=Math.floor(xp/100)+1;
+ $("streak").textContent=Number(localStorage.getItem("jee-streak")||0);
+ renderStreakCal();
+}
+function renderStreakCal(){
+ const box=$("streakCal");if(!box)return;box.innerHTML="";
+ for(let i=27;i>=0;i--){
+  const d=new Date(today);d.setDate(d.getDate()-i);
+  let pct=null;
+  try{const r=JSON.parse(localStorage.getItem("jee-d-"+dstr(d))||"null");
+   if(r&&r.tasks&&r.tasks.length)pct=Math.round(r.tasks.filter(t=>t.done).length/r.tasks.length*100);
+   else if(r&&r.tasks)pct=0;
+  }catch(e){}
+  const alpha=pct===null?0:0.15+pct/100*0.75;
+  const bg=pct===null?"transparent":`rgba(79,70,229,${alpha.toFixed(2)})`;
+  const border=pct===null?"1px dashed var(--border)":"1px solid transparent";
+  const cell=document.createElement("div");
+  cell.title=dstr(d)+(pct===null?" — no record":" — "+pct+"% done");
+  cell.style.cssText=`aspect-ratio:1;border-radius:5px;background:${bg};border:${border}`;
+  box.appendChild(cell);
+ }
+}
+function weekActuals(){
+ const start=weekStart(today);const sum={ph:0,ch:0,mh:0,pq:0,cq:0,mq:0};
+ for(let i=0;i<7;i++){
+  const d=new Date(start);d.setDate(d.getDate()+i);
+  try{const r=JSON.parse(localStorage.getItem("jee-d-"+dstr(d))||"null");
+   if(r&&r.actual){sum.ph+=Number(r.actual.aPh)||0;sum.ch+=Number(r.actual.aCh)||0;sum.mh+=Number(r.actual.aMh)||0;sum.pq+=Number(r.actual.aPq)||0;sum.cq+=Number(r.actual.aCq)||0;sum.mq+=Number(r.actual.aMq)||0}
+  }catch(e){}
+ }
+ return sum;
+}
+function loadWeek(){try{const w=JSON.parse(localStorage.getItem(wkKey)||"null");if(w)Object.keys(w).forEach(k=>{if($(k))$(k).value=w[k]})}catch(e){}}
+function saveWeek(){const w={};["wPh","wCh","wMh","wPq","wCq","wMq","wTests","wReview"].forEach(k=>w[k]=$(k).value);localStorage.setItem(wkKey,JSON.stringify(w))}
+function renderWeekly(){
+ const a=weekActuals();
+ const wp=n("wPh")>0?Math.min(100,Math.round(a.ph/n("wPh")*50+a.pq/Math.max(1,n("wPq"))*50)):0;
+ const wc=n("wCh")>0?Math.min(100,Math.round(a.ch/n("wCh")*50+a.cq/Math.max(1,n("wCq"))*50)):0;
+ const wm=n("wMh")>0?Math.min(100,Math.round(a.mh/n("wMh")*50+a.mq/Math.max(1,n("wMq"))*50)):0;
+ $("wpb").style.width=wp+"%";$("wpp").textContent=wp;$("wpTxt").textContent=a.ph.toFixed(1)+"h/"+n("wPh")+"h, "+a.pq+"/"+n("wPq")+"q";
+ $("wcb").style.width=wc+"%";$("wcp").textContent=wc;$("wcTxt").textContent=a.ch.toFixed(1)+"h/"+n("wCh")+"h, "+a.cq+"/"+n("wCq")+"q";
+ $("wmb").style.width=wm+"%";$("wmp").textContent=wm;$("wmTxt").textContent=a.mh.toFixed(1)+"h/"+n("wMh")+"h, "+a.mq+"/"+n("wMq")+"q";
+ const wo=Math.round((wp+wc+wm)/3);
+ $("whb").style.width=wo+"%";$("whp").textContent=wo;$("whTxt").textContent=(a.ph+a.ch+a.mh).toFixed(1)+"h total this week";
+ lastWeeklyOverall=wo;
+ saveWeek();
+}
+function update(){
+ const done=tasks.filter(t=>t.done).length;
+ const pct=tasks.length?Math.round(done/tasks.length*100):0;
+ $("completion").textContent=pct;$("completionBar").style.width=pct+"%";
+ const pp=subjPct(n("aPh",24),n("tPh"),n("aPq"),n("tPq"));
+ const cp=subjPct(n("aCh",24),n("tCh"),n("aCq"),n("tCq"));
+ const mp=subjPct(n("aMh",24),n("tMh"),n("aMq"),n("tMq"));
+ $("pb").style.width=pp+"%";$("pp").textContent=pp;
+ $("cb").style.width=cp+"%";$("cp").textContent=cp;
+ $("mb").style.width=mp+"%";$("mp").textContent=mp;
+ const overall=Math.round((pp+cp+mp)/3);
+ $("hb").style.width=overall+"%";$("hp").textContent=overall;
+ $("xpToday").textContent=done*10+Math.round((n("aPh",24)+n("aCh",24)+n("aMh",24))*2);
+ renderWeekly();
+ checkReward();
+}
+let syllabus=[];
+let lastWeeklyOverall=0;
+const DEFAULT_SYLLABUS=[
+["p","11th","Physics and Measurement"],["p","11th","Kinematics"],["p","11th","Laws of Motion"],["p","11th","Work, Energy and Power"],["p","11th","Rotational Motion"],["p","11th","Gravitation"],["p","11th","Properties of Solids and Liquids"],["p","11th","Thermodynamics"],["p","11th","Kinetic Theory of Gases"],["p","11th","Oscillations and Waves"],["p","11th","Experimental Skills"],
+["p","12th","Electrostatics"],["p","12th","Current Electricity"],["p","12th","Magnetic Effects of Current and Magnetism"],["p","12th","Electromagnetic Induction and AC"],["p","12th","Electromagnetic Waves"],["p","12th","Optics (Ray + Wave)"],["p","12th","Dual Nature of Matter and Radiation"],["p","12th","Atoms and Nuclei"],["p","12th","Electronic Devices (Semiconductors)"],
+["c","11th","Some Basic Concepts in Chemistry"],["c","11th","Atomic Structure"],["c","11th","Chemical Bonding and Molecular Structure"],["c","11th","Chemical Thermodynamics"],["c","11th","Equilibrium"],["c","11th","Classification of Elements and Periodicity"],["c","11th","Purification and Characterisation of Organic Compounds"],["c","11th","Basic Principles of Organic Chemistry"],["c","11th","Hydrocarbons"],
+["c","12th","Solutions"],["c","12th","Redox Reactions and Electrochemistry"],["c","12th","Chemical Kinetics"],["c","12th","p-Block Elements"],["c","12th","d- and f-Block Elements"],["c","12th","Coordination Compounds"],["c","12th","General Principles of Metallurgy"],["c","12th","Organic Compounds containing Halogens"],["c","12th","Organic Compounds containing Oxygen"],["c","12th","Organic Compounds containing Nitrogen"],["c","12th","Biomolecules and Polymers"],
+["m","11th","Sets, Relations and Functions"],["m","11th","Complex Numbers and Quadratic Equations"],["m","11th","Permutations and Combinations"],["m","11th","Binomial Theorem"],["m","11th","Sequences and Series"],["m","11th","Trigonometry"],["m","11th","Coordinate Geometry"],
+["m","12th","Matrices and Determinants"],["m","12th","Limit, Continuity and Differentiability"],["m","12th","Integral Calculus"],["m","12th","Differential Equations"],["m","12th","Three Dimensional Geometry"],["m","12th","Vector Algebra"],["m","12th","Statistics and Probability"]
+];
+function loadSyllabus(){
+ try{syllabus=JSON.parse(localStorage.getItem("jee-syllabus")||"[]")}catch(e){syllabus=[]}
+ if(syllabus.length===0){
+  syllabus=DEFAULT_SYLLABUS.map((c,i)=>({id:Date.now()+i,subj:c[0],cls:c[1],name:c[2],theory:false,revision:false,pyq:false,practice:false,weight:1,link:""}));
+  saveSyllabus();
+ }
+ syllabus.forEach(s=>{
+  if(s.theory===undefined)s.theory=!!(s.learned||s.status==="Done");
+  if(s.revision===undefined)s.revision=!!(s.revisions>0);
+  if(s.pyq===undefined)s.pyq=false;
+  if(s.practice===undefined)s.practice=!!(s.practiceCount>0);
+  if(s.weight===undefined)s.weight=1;
+  if(s.link===undefined)s.link="";
+ });
+}
+function saveSyllabus(){localStorage.setItem("jee-syllabus",JSON.stringify(syllabus))}
+let currentSyllSubj=null,currentSyllCls=null;
+function renderSyllabusList(){
+ const box=$("syllabusList");
+ if(!currentSyllSubj){box.innerHTML="";return;}
+ box.innerHTML="";
+ syllabus.filter(s=>s.subj===currentSyllSubj&&s.cls===currentSyllCls).forEach(s=>{
+  const row=document.createElement("div");row.className="task";row.style.flexDirection="column";row.style.alignItems="stretch";
+  row.innerHTML=`<div class="rowhead"><span style="flex:1">${s.name}</span><button class="small danger" data-delsyl="${s.id}">✕</button></div>
+  <div class="note" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:10px">
+  <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" data-f="theory" data-id="${s.id}" ${s.theory?"checked":""}>Theory</label>
+  <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" data-f="revision" data-id="${s.id}" ${s.revision?"checked":""}>Revision</label>
+  <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" data-f="pyq" data-id="${s.id}" ${s.pyq?"checked":""}>PYQs</label>
+  <label style="display:inline-flex;align-items:center;gap:4px"><input type="checkbox" data-f="practice" data-id="${s.id}" ${s.practice?"checked":""}>Practice</label>
+  </div>
+  <div class="note" style="margin-top:6px;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+  <label style="display:inline-flex;align-items:center;gap:4px">Weightage<input type="number" min="0" max="30" data-f="weight" data-id="${s.id}" value="${s.weight}" style="width:56px;min-height:28px;padding:2px 6px"></label>
+  <input type="text" data-f="link" data-id="${s.id}" value="${s.link}" placeholder="Formula sheet / notes link" style="flex:1;min-width:140px;min-height:28px;padding:2px 6px">
+  </div>`;
+  box.appendChild(row);
+ });
+}
+function renderSyllabus(){
+ const map={p:["spb","spp"],c:["scb","scp"],m:["smb","smp"]};
+ Object.keys(map).forEach(s=>{
+  const items=syllabus.filter(x=>x.subj===s);
+  const pct=items.length?Math.round(items.filter(x=>x.theory).length/items.length*100):0;
+  $(map[s][0]).style.width=pct+"%";$(map[s][1]).textContent=pct;
+ });
+ const total=syllabus.length;
+ const pct=f=>total?Math.round(syllabus.filter(f).length/total*100):0;
+ const theoryPct=pct(s=>s.theory),revPct=pct(s=>s.revision),pyqPct=pct(s=>s.pyq),pracPct=pct(s=>s.practice);
+ const fullPct=pct(s=>s.theory&&s.revision&&s.pyq&&s.practice);
+ const totalWeight=syllabus.reduce((s,c)=>s+(c.weight||0),0);
+ const wtdPct=totalWeight?Math.round(syllabus.filter(c=>c.theory).reduce((s,c)=>s+(c.weight||0),0)/totalWeight*100):0;
+ $("theoryPct").textContent=theoryPct;$("revPct").textContent=revPct;$("pyqPct").textContent=pyqPct;$("pracPct").textContent=pracPct;$("fullPct").textContent=fullPct;$("totalCh").textContent=total;$("wtdPct").textContent=wtdPct;
+ renderSyllabusList();
+ renderDashboard();
+}
+$("syllPopupBtns").addEventListener("click",e=>{
+ if(e.target.matches("[data-openpop]")){
+  const[subj,cls]=e.target.dataset.openpop.split("-");
+  currentSyllSubj=subj;currentSyllCls=cls;
+  const names={p:"Physics",c:"Chemistry",m:"Maths"};
+  $("syllModalTitle").textContent=names[subj]+" · "+cls;
+  $("syllAddRow").hidden=false;
+  renderSyllabusList();
+  $("syllModal").showModal();
+ }
+});
+$("openSlots").onclick=()=>{
+ currentSyllSubj=null;
+ $("syllModalTitle").textContent="Daily study slots";
+ $("syllAddRow").hidden=true;
+ $("syllabusList").innerHTML=`<table><tbody>
+ <tr><td>7:00–10:00</td><td>Slot 1 — 3h</td></tr>
+ <tr><td>11:00–2:00</td><td>Slot 2 — 3h</td></tr>
+ <tr><td>9:15–11:15</td><td>Slot 3 — 2h</td></tr>
+ </tbody></table>`;
+ $("syllModal").showModal();
+};
+$("addSyl").onclick=()=>{
+ const name=$("sylChapter").value.trim();if(!name||!currentSyllSubj)return;
+ syllabus.push({id:Date.now(),subj:currentSyllSubj,cls:currentSyllCls,name,theory:false,revision:false,pyq:false,practice:false,weight:1,link:""});
+ $("sylChapter").value="";saveSyllabus();renderSyllabus();
+};
+$("syllabusList").addEventListener("change",e=>{
+ if(e.target.matches("[data-f]")){
+  const s=syllabus.find(x=>x.id==e.target.dataset.id);if(!s)return;
+  const f=e.target.dataset.f;
+  if(e.target.type==="checkbox")s[f]=e.target.checked;
+  else if(e.target.type==="number")s[f]=Math.max(0,Number(e.target.value)||0);
+  else s[f]=e.target.value;
+  saveSyllabus();renderSyllabus();
+ }
+});
+$("syllabusList").addEventListener("click",e=>{
+ if(e.target.matches("[data-delsyl]")){syllabus=syllabus.filter(x=>x.id!=e.target.dataset.delsyl);saveSyllabus();renderSyllabus();}
+});
+function renderDashboard(){
+ const total=syllabus.length;
+ const dims=["theory","revision","pyq","practice"];
+ const syllPct=total?Math.round(dims.reduce((sum,d)=>sum+syllabus.filter(s=>s[d]).length,0)/(total*dims.length)*100):0;
+ const asc=[...tests].sort((a,b)=>a.id-b.id);
+ const rows=[];const prevPct={};
+ asc.forEach(t=>{
+  const pct=t.type==="mains"?t.marks/300*100:t.total/360*100;
+  const prev=prevPct[t.type];
+  rows.push({date:t.date,type:t.type,pct,delta:prev===undefined?null:pct-prev});
+  prevPct[t.type]=pct;
+ });
+ const recentPcts=rows.slice(-5).map(r=>r.pct);
+ const avgTest=recentPcts.length?Math.round(recentPcts.reduce((a,b)=>a+b,0)/recentPcts.length):0;
+ const prep=Math.round(syllPct*0.4+lastWeeklyOverall*0.3+avgTest*0.3);
+ $("syllPctBig").textContent=syllPct;$("avgTestPct").textContent=avgTest;$("prepScore").textContent=prep;
+ const box=$("marksTrend");box.innerHTML="";
+ rows.slice().reverse().slice(0,6).forEach(r=>{
+  const arrow=r.delta===null?"—":(r.delta>=0?"▲+"+r.delta.toFixed(1)+"%":"▼"+r.delta.toFixed(1)+"%");
+  box.innerHTML+=`<div class="task"><span class="tag">${r.type==="mains"?"Mains":"Advanced"}</span><span>${r.date||"—"} · ${r.pct.toFixed(1)}%</span><span style="margin-left:auto;font-weight:700">${arrow}</span></div>`;
+ });
+}
+let pyqPapers=[];
+function loadPyqPapers(){
+ try{pyqPapers=JSON.parse(localStorage.getItem("jee-pyqpapers")||"[]")}catch(e){pyqPapers=[]}
+ if(pyqPapers.length===0){
+  const years=[];for(let y=2014;y<=2026;y++)years.push(y);
+  pyqPapers=years.map((y,i)=>({id:Date.now()+i,year:y,done:false,score:null}));
+  savePyqPapers();
+ }
+}
+function savePyqPapers(){localStorage.setItem("jee-pyqpapers",JSON.stringify(pyqPapers))}
+function renderPyqPapers(){
+ const body=$("pyqPaperBody");if(!body)return;body.innerHTML="";
+ pyqPapers.slice().sort((a,b)=>b.year-a.year).forEach(p=>{
+  body.innerHTML+=`<tr><td>${p.year}</td><td><input type="checkbox" data-pyqdone="${p.id}" ${p.done?"checked":""}></td><td><input type="number" min="0" max="360" style="width:70px;min-height:30px" data-pyqscore="${p.id}" value="${p.score===null||p.score===undefined?"":p.score}"></td></tr>`;
+ });
+ $("pyqYearsTotal").textContent=pyqPapers.length;
+ const done=pyqPapers.filter(p=>p.done);
+ $("pyqYearsDone").textContent=done.length;
+ const scored=pyqPapers.filter(p=>p.done&&typeof p.score==="number"&&p.score!==null);
+ $("pyqAvgScore").textContent=scored.length?Math.round(scored.reduce((s,p)=>s+p.score,0)/scored.length/360*100):0;
+}
+$("pyqPaperBody").addEventListener("change",e=>{
+ if(e.target.matches("[data-pyqdone]")){const p=pyqPapers.find(x=>x.id==e.target.dataset.pyqdone);if(p){p.done=e.target.checked;savePyqPapers();renderPyqPapers();}}
+ if(e.target.matches("[data-pyqscore]")){const p=pyqPapers.find(x=>x.id==e.target.dataset.pyqscore);if(p){const v=e.target.value;p.score=v===""?null:Math.max(0,Math.min(360,Number(v)||0));savePyqPapers();renderPyqPapers();}}
+});
+$("openPyqPop").onclick=()=>{renderPyqPapers();$("pyqModal").showModal();};
+$("closePyqModal").onclick=()=>$("pyqModal").close();
+let books=[];
+const DEFAULT_BOOKS=[
+["p","H.C. Verma"],["p","Physics PYQs"],["p","Sashi Bhushan Tiwari (SBT)"],["p","Irodov — Problems in General Physics"],["p","Coaching Module — Physics"],
+["c-phy","Physical Chemistry — Neeraj Kumar"],["c-phy","Coaching Module — Physical Chemistry"],
+["c-org","Organic Chemistry — MS Chauhan"],["c-org","Coaching Module — Organic Chemistry"],
+["c-inorg","Inorganic Chemistry — VK Jaiswal"],["c-inorg","Coaching Module — Inorganic Chemistry"],
+["m-alg","Algebra — Hall & Knight"],["m-alg","Coaching Module — Algebra"],
+["m-trig","Trigonometry & Geometry — SL Loney"],["m-trig","Coaching Module — Trig & Geometry"],
+["m-calc","Calculus — Prilepko"],["m-calc","Coaching Module — Calculus"]
+];
+function loadBooks(){
+ try{books=JSON.parse(localStorage.getItem("jee-books")||"[]")}catch(e){books=[]}
+ if(books.length===0){
+  books=DEFAULT_BOOKS.map((b,i)=>({id:Date.now()+i,subj:b[0],title:b[1],chapters:[],weeklyRev:[false,false,false,false]}));
+  saveBooks();
+ }
+ books.forEach(b=>{if(!Array.isArray(b.weeklyRev))b.weeklyRev=[false,false,false,false];if(!Array.isArray(b.chapters))b.chapters=[];});
+}
+function saveBooks(){localStorage.setItem("jee-books",JSON.stringify(books))}
+const BOOK_SUBJ_NAMES={p:"Physics","c-phy":"Chem (Physical)","c-org":"Chem (Organic)","c-inorg":"Chem (Inorganic)","m-alg":"Maths (Algebra)","m-trig":"Maths (Trig/Geo)","m-calc":"Maths (Calculus)",m:"Maths"};
+let currentBookSubj=null,currentBookSearch="";
+function renderBookButtons(){
+ const box=$("bookPopupBtns");if(!box)return;box.innerHTML="";
+ Object.keys(BOOK_SUBJ_NAMES).forEach(subj=>{
+  const bks=books.filter(b=>b.subj===subj);
+  const q=bks.reduce((s,b)=>s+b.chapters.reduce((s2,c)=>s2+(c.q||0),0),0);
+  const pending=bks.filter(b=>b.weeklyRev.some(w=>!w)).length;
+  const btn=document.createElement("button");
+  btn.dataset.openbookpop=subj;
+  btn.innerHTML=`${BOOK_SUBJ_NAMES[subj]}<br><span class="note" style="font-weight:400">${q} Qs${pending?" · ⚠ "+pending+" pending rev.":""}</span>`;
+  box.appendChild(btn);
+ });
+}
+function renderBooks(){
+ const box=$("booksList");
+ renderBookButtons();
+ if(!currentBookSubj){box.innerHTML="";renderBookTotals();return;}
+ box.innerHTML="";
+ const term=currentBookSearch.trim().toLowerCase();
+ books.filter(b=>b.subj===currentBookSubj).forEach(b=>{
+  const wkLabels=["Wk1","Wk2","Wk3","Wk4"];
+  const wkBoxes=wkLabels.map((l,i)=>`<label style="display:inline-flex;align-items:center;gap:3px;margin-right:8px"><input type="checkbox" data-wk="${i}" data-id="${b.id}" ${b.weeklyRev[i]?"checked":""}>${l}</label>`).join("");
+  const totalQ=b.chapters.reduce((s,c)=>s+(c.q||0),0);
+  const visChapters=term?b.chapters.filter(c=>c.name.toLowerCase().includes(term)):b.chapters;
+  const chRows=visChapters.map(c=>`<div class="task"><span style="flex:1">${c.name}</span><input type="number" min="0" style="width:60px;min-height:30px" data-chq="${c.id}" data-bookid="${b.id}" value="${c.q}"> Qs <button class="small danger" data-delch="${c.id}" data-bookid="${b.id}">✕</button></div>`).join("");
+  if(term&&!visChapters.length)return;
+  const row=document.createElement("div");row.className="subject";row.style.marginBottom="10px";
+  row.innerHTML=`<div class="rowhead"><div><strong>${b.title}</strong></div><button class="small danger" data-delbk="${b.id}">✕</button></div>
+  <div class="note" style="margin-top:6px">Revision passes: ${wkBoxes}</div>
+  <div class="addrow" style="margin-top:8px"><input type="text" class="chNameInput" data-bookid="${b.id}" placeholder="Chapter solved through this book"><input type="number" min="0" class="chQInput" style="max-width:70px" data-bookid="${b.id}" placeholder="Qs"><button class="small primary" data-addch="${b.id}">Add</button></div>
+  <div class="note" style="margin:6px 0">Total Qs solved: ${totalQ} across ${b.chapters.length} chapter(s)</div>
+  <div>${chRows}</div>`;
+  box.appendChild(row);
+ });
+ renderBookTotals();
+}
+function renderBookTotals(){
+ $("bkTotalBooks").textContent=books.length;
+ $("bkTotalQ").textContent=books.reduce((s,b)=>s+b.chapters.reduce((s2,c)=>s2+(c.q||0),0),0);
+ $("bkTotalRev").textContent=books.reduce((s,b)=>s+b.weeklyRev.filter(Boolean).length,0);
+}
+$("bookPopupBtns").addEventListener("click",e=>{
+ const btn=e.target.closest("[data-openbookpop]");
+ if(btn){
+  currentBookSubj=btn.dataset.openbookpop;currentBookSearch="";$("bookSearch").value="";
+  $("booksModalTitle").textContent=BOOK_SUBJ_NAMES[currentBookSubj]+" books";
+  renderBooks();
+  $("booksModal").showModal();
+ }
+});
+$("bookSearch").addEventListener("input",e=>{currentBookSearch=e.target.value;renderBooks();});
+$("closeBooksModal").onclick=()=>$("booksModal").close();
+$("addBook").onclick=()=>{
+ const title=$("bkTitle").value.trim();if(!title||!currentBookSubj)return;
+ books.push({id:Date.now(),subj:currentBookSubj,title,chapters:[],weeklyRev:[false,false,false,false]});
+ $("bkTitle").value="";saveBooks();renderBooks();
+};
+$("booksList").addEventListener("change",e=>{
+ if(e.target.matches("[data-wk]")){const b=books.find(x=>x.id==e.target.dataset.id);if(b){b.weeklyRev[Number(e.target.dataset.wk)]=e.target.checked;saveBooks();renderBooks();}}
+ if(e.target.matches("[data-chq]")){const b=books.find(x=>x.id==e.target.dataset.bookid);if(b){const c=b.chapters.find(x=>x.id==e.target.dataset.chq);if(c){c.q=Number(e.target.value)||0;saveBooks();renderBooks();}}}
+});
+$("booksList").addEventListener("click",e=>{
+ if(e.target.matches("[data-delbk]")){books=books.filter(x=>x.id!=e.target.dataset.delbk);saveBooks();renderBooks();}
+ if(e.target.matches("[data-delch]")){const b=books.find(x=>x.id==e.target.dataset.bookid);if(b){b.chapters=b.chapters.filter(x=>x.id!=e.target.dataset.delch);saveBooks();renderBooks();}}
+ if(e.target.matches("[data-addch]")){
+  const bookid=e.target.dataset.addch;
+  const nameInput=document.querySelector(`.chNameInput[data-bookid="${bookid}"]`);
+  const qInput=document.querySelector(`.chQInput[data-bookid="${bookid}"]`);
+  const name=nameInput.value.trim();if(!name)return;
+  const b=books.find(x=>x.id==bookid);
+  if(b){b.chapters.push({id:Date.now(),name,q:Number(qInput.value)||0});saveBooks();renderBooks();}
+ }
+});
+$("closeSyllModal").onclick=()=>$("syllModal").close();
+function computeBacklog(){
+ const dismissed=new Set(JSON.parse(localStorage.getItem("jee-backlog-dismissed")||"[]"));
+ const items=[];
+ for(let i=1;i<=7;i++){
+  const d=new Date(today);d.setDate(d.getDate()-i);
+  try{const r=JSON.parse(localStorage.getItem("jee-d-"+dstr(d))||"null");
+   if(r&&r.tasks)r.tasks.forEach(t=>{if(!t.done&&!dismissed.has(t.id))items.push(Object.assign({},t,{fromDate:dstr(d)}));});
+  }catch(e){}
+ }
+ return items;
+}
+function renderBacklog(){
+ const items=computeBacklog();
+ const box=$("backlogList");box.innerHTML="";
+ if(!items.length){box.innerHTML='<div class="note">No missed tasks — nice.</div>';return;}
+ const names={p:"Physics",c:"Chemistry",m:"Maths",o:"Other"};
+ items.forEach(t=>{
+  const row=document.createElement("div");row.className="task";
+  row.innerHTML=`<span class="tag">${names[t.subj]}</span><span style="flex:1">${t.text}<br><span class="note">missed ${t.fromDate}</span></span><button class="small primary" data-addback="${t.id}">Add to today</button><button class="small danger" data-dismissback="${t.id}">✕</button>`;
+  box.appendChild(row);
+ });
+}
+$("backlogList").addEventListener("click",e=>{
+ if(e.target.matches("[data-addback]")){
+  const t=computeBacklog().find(x=>x.id==e.target.dataset.addback);
+  if(t){
+   tasks.push({id:Date.now(),subj:t.subj,text:t.text,done:false});saveDay(true);renderTasks();
+   const d=JSON.parse(localStorage.getItem("jee-backlog-dismissed")||"[]");d.push(t.id);localStorage.setItem("jee-backlog-dismissed",JSON.stringify(d));
+   renderBacklog();
+  }
+ }
+ if(e.target.matches("[data-dismissback]")){
+  const d=JSON.parse(localStorage.getItem("jee-backlog-dismissed")||"[]");d.push(Number(e.target.dataset.dismissback));localStorage.setItem("jee-backlog-dismissed",JSON.stringify(d));renderBacklog();
+ }
+});
+const REVIEW_INTERVALS=[1,3,7,16,35];
+let notebook=[];
+function loadNotebook(){try{notebook=JSON.parse(localStorage.getItem("jee-notebook")||"[]")}catch(e){notebook=[]}}
+function saveNotebook(){localStorage.setItem("jee-notebook",JSON.stringify(notebook))}
+function addDays(dateStr,days){const d=new Date(dateStr);d.setDate(d.getDate()+days);return dstr(d)}
+$("addNb").onclick=()=>{
+ const topic=$("nbTopic").value.trim();if(!topic)return;
+ notebook.push({id:Date.now(),subj:$("nbSubj").value,topic,type:$("nbType").value,note:$("nbNote").value,interval:0,nextReview:dstr(today)});
+ $("nbTopic").value="";$("nbNote").value="";
+ saveNotebook();renderNotebook();
+};
+function renderNotebook(){
+ const box=$("notebookList");box.innerHTML="";
+ const names={p:"Physics",c:"Chemistry",m:"Maths"};
+ const todayStr=dstr(today);
+ [...notebook].sort((a,b)=>a.nextReview<b.nextReview?-1:1).forEach(e=>{
+  const overdue=e.nextReview<=todayStr;
+  const row=document.createElement("div");row.className="task";
+  row.innerHTML=`<span class="tag">${names[e.subj]}</span><span style="flex:1"><b>${e.topic}</b> — ${e.type}<br><span class="note">${e.note||""}</span></span><span class="note" style="${overdue?"color:var(--danger);font-weight:700":""}">${overdue?"Due now":"Due "+e.nextReview}</span><button class="small" data-rev="${e.id}">✓ Reviewed</button><button class="small danger" data-delnb="${e.id}">✕</button>`;
+  box.appendChild(row);
+ });
+}
+$("notebookList").addEventListener("click",e=>{
+ if(e.target.matches("[data-rev]")){
+  const item=notebook.find(x=>x.id==e.target.dataset.rev);
+  if(item){item.interval=Math.min(REVIEW_INTERVALS.length-1,item.interval+1);item.nextReview=addDays(dstr(today),REVIEW_INTERVALS[item.interval]);}
+  saveNotebook();renderNotebook();
+ }
+ if(e.target.matches("[data-delnb]")){notebook=notebook.filter(x=>x.id!=e.target.dataset.delnb);saveNotebook();renderNotebook();}
+});
+let tests=[];
+function loadTests(){try{tests=JSON.parse(localStorage.getItem("jee-tests")||"[]")}catch(e){tests=[]}renderTests()}
+function saveTests(){localStorage.setItem("jee-tests",JSON.stringify(tests))}
+$("testType").onchange=()=>{const v=$("testType").value;$("mainsForm").hidden=v!=="mains";$("advForm").hidden=v!=="adv"};
+$("addTestBtn").onclick=()=>{
+ const v=$("testType").value;
+ if(v==="mains"){
+  tests.push({id:Date.now(),type:"mains",date:$("mDate").value,time:n("mTime"),marks:n("mMarks",300),mist:n("mMist"),silly:n("mSilly"),oos:n("mOos"),lack:n("mLack"),left:n("mLeft")});
+ }else{
+  const p1={marks:n("p1Marks",180),time:n("p1Time"),mist:n("p1Mist"),silly:n("p1Silly"),oos:n("p1Oos"),lack:n("p1Lack"),left:n("p1Left")};
+  const p2={marks:n("p2Marks",180),time:n("p2Time"),mist:n("p2Mist"),silly:n("p2Silly"),oos:n("p2Oos"),lack:n("p2Lack"),left:n("p2Left")};
+  tests.push({id:Date.now(),type:"adv",date:$("aDate").value,rank:n("aRank"),p1,p2,total:p1.marks+p2.marks});
+ }
+ saveTests();renderTests();
+};
+function renderTests(){
+ const mb=$("mainsTbl").querySelector("tbody");mb.innerHTML="";
+ const ab=$("advTbl").querySelector("tbody");ab.innerHTML="";
+ const mainsAsc=tests.filter(t=>t.type==="mains").sort((a,b)=>a.id-b.id);
+ const advAsc=tests.filter(t=>t.type==="adv").sort((a,b)=>a.id-b.id);
+ const mNo={};mainsAsc.forEach((t,i)=>mNo[t.id]=i+1);
+ const aNo={};advAsc.forEach((t,i)=>aNo[t.id]=i+1);
+ [...mainsAsc].reverse().forEach(t=>{
+  mb.innerHTML+=`<tr><td>#${mNo[t.id]}</td><td>${t.date||"—"}</td><td>${t.marks}/300</td><td>${(t.marks/300*100).toFixed(1)}%</td><td>${t.time}m</td><td>${t.mist}</td><td>${t.silly}</td><td>${t.oos}</td><td>${t.lack}</td><td>${t.left||0}</td><td><button class="small danger" data-deltest="${t.id}">✕</button></td></tr>`;
+ });
+ [...advAsc].reverse().forEach(t=>{
+  ab.innerHTML+=`<tr><td>#${aNo[t.id]}</td><td>${t.date||"—"}</td><td>${t.rank||"—"}</td><td>${t.p1.marks}/180 (${t.p1.mist}m,${t.p1.silly}s)</td><td>${t.p2.marks}/180 (${t.p2.mist}m,${t.p2.silly}s)</td><td>${t.total}/360</td><td>${(t.total/360*100).toFixed(1)}%</td><td>${(t.p1.left||0)+(t.p2.left||0)}</td><td><button class="small danger" data-deltest="${t.id}">✕</button></td></tr>`;
+ });
+ renderDashboard();renderCharts();renderCompare();
+}
+function delTest(e){if(e.target.matches("[data-deltest]")){tests=tests.filter(t=>t.id!=e.target.dataset.deltest);saveTests();renderTests()}}
+function buildLineChart(mainsPts,advPts){
+ const w=300,h=140,pad=26;
+ const maxX=Math.max(1,mainsPts.length?mainsPts[mainsPts.length-1].x:0,advPts.length?advPts[advPts.length-1].x:0);
+ const xScale=x=>pad+(x-1)/Math.max(1,maxX-1)*(w-2*pad);
+ const yScale=y=>h-pad-(y/100)*(h-2*pad);
+ function path(pts,color){
+  if(!pts.length)return"";
+  const d=pts.map((p,i)=>(i===0?"M":"L")+xScale(p.x).toFixed(1)+","+yScale(p.y).toFixed(1)).join(" ");
+  const dots=pts.map(p=>`<circle cx="${xScale(p.x).toFixed(1)}" cy="${yScale(p.y).toFixed(1)}" r="3" style="fill:${color}"/>`).join("");
+  return `<path d="${d}" fill="none" style="stroke:${color};stroke-width:2"/>${dots}`;
+ }
+ let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto">`;
+ svg+=`<line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" style="stroke:#98a2b3;stroke-width:1"/>`;
+ svg+=path(mainsPts,"#4f46e5");
+ svg+=path(advPts,"#e06c75");
+ svg+=`</svg><div class="note">— Mains &nbsp;&nbsp; <span style="color:#e06c75">—</span> Advanced (marks % per test, in order taken)</div>`;
+ return mainsPts.length||advPts.length?svg:'<div class="note">Add test results to see the trend.</div>';
+}
+function buildBarChart(data){
+ const w=300,h=140,pad=24,bw=(w-2*pad)/data.length;
+ const max=Math.max(1,...data.map(d=>d[1]));
+ let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto">`;
+ data.forEach((d,i)=>{
+  const bh=(d[1]/max)*(h-2*pad-16);
+  const x=pad+i*bw+bw*0.15,bwid=bw*0.7;
+  svg+=`<rect x="${x.toFixed(1)}" y="${(h-pad-bh).toFixed(1)}" width="${bwid.toFixed(1)}" height="${bh.toFixed(1)}" rx="3" style="fill:#4f46e5"/>`;
+  svg+=`<text x="${(x+bwid/2).toFixed(1)}" y="${h-pad+13}" font-size="9" style="fill:#667085" text-anchor="middle">${d[0]}</text>`;
+  svg+=`<text x="${(x+bwid/2).toFixed(1)}" y="${(h-pad-bh-4).toFixed(1)}" font-size="9" text-anchor="middle">${d[1]}</text>`;
+ });
+ svg+=`</svg>`;
+ return svg;
+}
+function buildCompareChart(labels,latest,prev,hasPrev){
+ const w=300,h=150,pad=26;
+ const n=labels.length;
+ const groupW=(w-2*pad)/n;
+ const barW=groupW*0.3;
+ const max=Math.max(1,...latest,...(hasPrev?prev:[0]));
+ let svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto">`;
+ labels.forEach((lab,i)=>{
+  const gx=pad+i*groupW+groupW*0.12;
+  const lv=latest[i]||0,pv=hasPrev?(prev[i]||0):0;
+  const lh=(lv/max)*(h-2*pad-16),ph=(pv/max)*(h-2*pad-16);
+  svg+=`<rect x="${gx.toFixed(1)}" y="${(h-pad-lh).toFixed(1)}" width="${barW.toFixed(1)}" height="${lh.toFixed(1)}" rx="2" style="fill:#4f46e5"/>`;
+  if(hasPrev)svg+=`<rect x="${(gx+barW+3).toFixed(1)}" y="${(h-pad-ph).toFixed(1)}" width="${barW.toFixed(1)}" height="${ph.toFixed(1)}" rx="2" style="fill:#c7d2fe"/>`;
+  svg+=`<text x="${(gx+barW+1.5).toFixed(1)}" y="${h-pad+13}" font-size="8" text-anchor="middle" style="fill:#667085">${lab}</text>`;
+ });
+ svg+=`<line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" style="stroke:#98a2b3;stroke-width:1"/>`;
+ svg+="</svg>";
+ svg+=`<div class="note">■ Latest &nbsp;&nbsp; <span style="color:#c7d2fe">■</span> Previous</div>`;
+ return svg;
+}
+function renderCompare(){
+ const mainsAsc=tests.filter(t=>t.type==="mains").sort((a,b)=>a.id-b.id);
+ const advAsc=tests.filter(t=>t.type==="adv").sort((a,b)=>a.id-b.id);
+ const mainsMetrics=[
+  {label:"Marks%",get:t=>Math.round(t.marks/300*100)},
+  {label:"Mistakes",get:t=>t.mist||0},
+  {label:"Left",get:t=>t.left||0},
+  {label:"Time(m)",get:t=>t.time||0}
+ ];
+ const advMetrics=[
+  {label:"Marks%",get:t=>Math.round(t.total/360*100)},
+  {label:"Mistakes",get:t=>(t.p1.mist||0)+(t.p2.mist||0)},
+  {label:"Left",get:t=>(t.p1.left||0)+(t.p2.left||0)},
+  {label:"Time(m)",get:t=>(t.p1.time||0)+(t.p2.time||0)}
+ ];
+ function fill(elId,arr,metrics){
+  const box=$(elId);if(!box)return;
+  if(!arr.length){box.innerHTML='<div class="note">Add a test to see this.</div>';return;}
+  const latest=arr[arr.length-1],prev=arr.length>1?arr[arr.length-2]:null;
+  const labels=metrics.map(m=>m.label);
+  const lv=metrics.map(m=>m.get(latest));
+  const pv=prev?metrics.map(m=>m.get(prev)):null;
+  box.innerHTML=buildCompareChart(labels,lv,pv,!!prev)+(prev?"":'<div class="note">Only one test so far — add another to compare.</div>');
+ }
+ fill("compareMainsChart",mainsAsc,mainsMetrics);
+ fill("compareAdvChart",advAsc,advMetrics);
+}
+function renderCharts(){
+ const asc=[...tests].sort((a,b)=>a.id-b.id);
+ let mainsPts=[],advPts=[],mCount=0,aCount=0;
+ asc.forEach(t=>{
+  if(t.type==="mains"){mCount++;mainsPts.push({x:mCount,y:t.marks/300*100})}
+  else{aCount++;advPts.push({x:aCount,y:t.total/360*100})}
+ });
+ $("marksChart").innerHTML=buildLineChart(mainsPts,advPts);
+ let silly=0,oos=0,lack=0,totalMist=0;
+ tests.forEach(t=>{
+  if(t.type==="mains"){silly+=t.silly||0;oos+=t.oos||0;lack+=t.lack||0;totalMist+=t.mist||0;}
+  else{[t.p1,t.p2].forEach(p=>{silly+=p.silly||0;oos+=p.oos||0;lack+=p.lack||0;totalMist+=p.mist||0;});}
+ });
+ $("mistakeChart").innerHTML=buildBarChart([["Silly",silly],["OOS",oos],["Lack-th.",lack],["Other",Math.max(0,totalMist-silly-oos-lack)]]);
+}
+$("mainsTbl").addEventListener("click",delTest);
+$("advTbl").addEventListener("click",delTest);
+document.querySelectorAll("input,select,textarea").forEach(x=>{if(!["newSubj","newTask","testType"].includes(x.id))x.addEventListener("input",()=>{update();saveDay(true)})});
+$("save").onclick=()=>{saveDay(false);checkReward()};
+$("reset").onclick=()=>{if(confirm("Reset today's tracker?")){localStorage.removeItem(dayKey);location.reload()}};
+loadDay();loadWeek();loadTests();loadSyllabus();loadNotebook();loadBooks();loadPyqPapers();renderXP();update();renderSyllabus();renderNotebook();renderBooks();renderPyqPapers();renderBacklog();
+if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+
+<script>
+(function(){
+const C=id=>document.getElementById(id);
+const subjNames={p:'Physics',c:'Chemistry',m:'Maths'};
+let focus={remaining:25*60,running:false,last:0,subj:'p',preset:25};
+let focusTimer=null;
+function toast(msg){const x=C('toast');x.textContent=msg;x.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove('show'),2200)}
+function xp(){return Number(localStorage.getItem('jee-xp')||0)}
+function level(){return Math.floor(xp()/100)+1}
+function titleFor(l){return l>=30?'JEE Legend':l>=20?'Advanced Mode':l>=10?'JEE Warrior':l>=5?'Consistent':'Rookie'}
+function todayFocus(){return Number(localStorage.getItem('jee-focus-'+dstr(today))||0)}
+function setFocus(v){localStorage.setItem('jee-focus-'+dstr(today),String(v));renderCommand()}
+function renderCommand(){
+ const x=xp(),l=level(),next=l*100,within=x-(l-1)*100;
+ C('cmdLevel').textContent=l;C('cmdTitle').textContent=titleFor(l);C('cmdXp').textContent=x;C('cmdNextXp').textContent=next;C('cmdXpBar').style.width=Math.min(100,within)+'%';C('cmdStreak').textContent=localStorage.getItem('jee-streak')||0;
+ C('qFocus').textContent=todayFocus();C('focusTodayBig').textContent=todayFocus();C('qCompletion').textContent=C('completion')?.textContent||'0%';C('qReviews').textContent=dueReviews().length;C('qBadges').textContent=achievementList().filter(a=>a.done).length;
+ const mv=smartItems()[0];C('nextMove').textContent=mv?mv.text:'Everything is under control — pick a task and start a focus block.';C('nextReason').textContent=mv?mv.reason:'';
+ renderRevision();renderWeakness();renderAchievements();renderSmartPlan();renderCountdown();
+}
+function dueReviews(){if(typeof notebook==='undefined')return [];const ts=dstr(today);return notebook.filter(x=>x.nextReview<=ts)}
+function smartItems(){
+ const out=[];
+ if(typeof tasks!=='undefined')tasks.filter(t=>!t.done).forEach(t=>out.push({score:80,text:'Do '+subjNames[t.subj]+': '+t.text,reason:'Unfinished task from today.'}));
+ dueReviews().forEach(r=>out.push({score:95,text:'Review '+r.topic,reason:'Spaced revision is due today.'}));
+ if(typeof day!=='undefined'){const map=[['aPh','tPh','p'],['aCh','tCh','c'],['aMh','tMh','m']];map.forEach(([a,t,s])=>{const deficit=Math.max(0,Number(day.targets[t]||0)-Number(day.actual[a]||0));if(deficit>0)out.push({score:60+deficit*3,text:subjNames[s]+' target: '+deficit+' h remaining',reason:'Today\'s target is not yet met.'})})}
+ return out.sort((a,b)=>b.score-a.score).slice(0,8);
+}
+function renderSmartPlan(){const box=C('smartPlan');const a=smartItems();box.innerHTML=a.length?a.map((x,i)=>`<div class="due"><b>${i+1}. ${x.text}</b><div class="note">${x.reason}</div></div>`).join(''):'<div class="note">No urgent item detected. Nice work.</div>'}
+function renderRevision(){const box=C('revisionRadar');const a=dueReviews().sort((x,y)=>x.nextReview.localeCompare(y.nextReview));box.innerHTML=a.length?a.slice(0,8).map(x=>`<div class="due overdue"><b>${subjNames[x.subj]} — ${x.topic}</b><div class="note">${x.type} · ${x.note||'Review the concept and solve a few questions.'}</div></div>`).join(''):'<div class="note">🎉 No revision is due today.</div>'}
+function renderWeakness(){
+ const box=C('weaknessHeat');let vals={p:50,c:50,m:50},counts={p:0,c:0,m:0};
+ if(typeof tests!=='undefined'&&tests.length){tests.forEach(t=>{if(t.type==='mains'){const pct=t.marks/300*100;vals.p+=0;vals.c+=0;vals.m+=0;counts.p++;counts.c++;counts.m++;} });
+ // Subject-specific weakness is strongest when mistake records are available.
+ vals={p:0,c:0,m:0};counts={p:0,c:0,m:0};
+ if(typeof notebook!=='undefined')notebook.forEach(n=>{vals[n.subj]+=n.type==='Concept'?20:n.type==='Method'?15:n.type==='Calculation'?10:8;counts[n.subj]++});
+ ['p','c','m'].forEach(s=>{vals[s]=Math.min(100,Math.round(vals[s]||5))});
+ }
+ box.innerHTML=['p','c','m'].map(s=>{const weakness=vals[s];const strength=Math.max(0,100-weakness);return `<div class="heatbox"><b>${subjNames[s]}</b><div class="label">Estimated strength ${strength}%</div><div class="heatbar"><i style="width:${strength}%"></i></div><div class="note" style="margin-top:6px">${counts[s]||0} logged weak points</div></div>`}).join('');
+}
+function achievementList(){
+ const totalTasks=typeof tasks!=='undefined'?tasks.filter(t=>t.done).length:0;
+ const totalTests=typeof tests!=='undefined'?tests.length:0;const streak=Number(localStorage.getItem('jee-streak')||0);const f=Number(localStorage.getItem('jee-focus-total')||0)+todayFocus();
+ return [
+ {icon:'🌱',name:'First Step',desc:'Complete 1 task',done:totalTasks>=1},{icon:'🔥',name:'7-Day Flame',desc:'Reach a 7-day streak',done:streak>=7},{icon:'📚',name:'100 Questions',desc:'Log 100 completed tasks',done:totalTasks>=100},{icon:'⏱️',name:'Deep Worker',desc:'Complete 10 focus hours',done:f>=600},{icon:'📝',name:'Test Taker',desc:'Complete 5 tests',done:totalTests>=5},{icon:'🧠',name:'Revision Machine',desc:'Log 10 mistake/revision items',done:typeof notebook!=='undefined'&&notebook.length>=10},{icon:'💯',name:'Century Level',desc:'Reach Level 10',done:level()>=10},{icon:'🏆',name:'Consistency King',desc:'Reach a 30-day streak',done:streak>=30}
+ ];
+}
+function renderAchievements(){C('achievements').innerHTML=achievementList().map(a=>`<div class="achievement ${a.done?'':'locked'}"><div class="icon">${a.icon}</div><div><b>${a.name}</b><div class="note">${a.desc}</div></div>${a.done?'<span style="margin-left:auto">✓</span>':''}</div>`).join('')}
+function tick(){if(!focus.running)return;const now=Date.now();const elapsed=Math.floor((now-focus.last)/1000);if(elapsed>0){focus.remaining-=elapsed;focus.last+=elapsed*1000;while(focus.remaining<=0){focus.running=false;focus.remaining=0;const mins=focus.preset;setFocus(todayFocus()+mins);localStorage.setItem('jee-focus-total',String(Number(localStorage.getItem('jee-focus-total')||0)+mins));toast('🎉 Focus session complete! +'+mins+' min');break}C('focusClock').textContent=fmt(focus.remaining);if(!focus.running)clearInterval(focusTimer)}}
+function fmt(s){s=Math.max(0,Math.floor(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function resetFocus(mins=focus.preset){focus.remaining=mins*60;focus.preset=mins;focus.running=false;C('focusClock').textContent=fmt(focus.remaining);clearInterval(focusTimer)}
+C('focusStart').onclick=()=>{if(focus.remaining<=0)resetFocus();focus.running=true;focus.last=Date.now();clearInterval(focusTimer);focusTimer=setInterval(tick,250);toast('⏱ Focus started — phone away, one task only.')}
+C('focusPause').onclick=()=>{tick();focus.running=false;clearInterval(focusTimer);toast('Paused.')}
+C('focusReset').onclick=()=>resetFocus();
+document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>resetFocus(Number(b.dataset.preset)));
+document.querySelectorAll('[data-focus-subj]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-focus-subj]').forEach(x=>x.classList.remove('active'));b.classList.add('active');focus.subj=b.dataset.focusSubj});
+C('startMission').onclick=()=>{const m=smartItems()[0];if(m){toast('🎯 '+m.text);resetFocus(25);C('focusStart').click()}else toast('Add a task first.')};
+C('emergencyBtn').onclick=()=>{C('recoveryMinutes').focus();C('buildRecovery').click()};
+C('buildRecovery').onclick=()=>{const mins=Math.max(30,Number(C('recoveryMinutes').value)||240),mode=C('recoveryEnergy').value,prio=C('recoveryPriority').value;let items=smartItems();if(prio==='weak')items=items.sort((a,b)=>b.score-a.score);const block=mode==='low'?25:mode==='high'?60:45;let n=Math.max(1,Math.floor(mins/(block+10)));let arr=[];for(let i=0;i<n;i++){const x=items[i%Math.max(1,items.length)]||{text:'Chapter revision',reason:'Keep momentum.'};arr.push(`<div class="due"><b>${i+1}. ${x.text}</b><div class="note">${block} min work · 10 min break · ${x.reason}</div></div>`)}C('recoveryPlan').innerHTML=`<div class="stat"><b>Recovery plan: ${mins} min</b><div class="note">${arr.length} focused blocks · protect the final block for revision.</div></div>`+arr.join('');toast('🚨 Recovery plan built.')};
+C('celebrateBtn').onclick=()=>{C('progressSummary').innerHTML=`<div class="stat"><div class="label">Level</div><div class="big">${level()} · ${titleFor(level())}</div></div><div class="grid" style="margin-top:10px"><div class="stat"><div class="label">XP</div><div class="big">${xp()}</div></div><div class="stat"><div class="label">Focus today</div><div class="big">${todayFocus()} min</div></div></div><div class="note" style="margin-top:10px">Keep building consistency. A strong JEE preparation is made from ordinary days completed well.</div>`;C('celebrateModal').classList.add('open')};
+C('closeCelebrate').onclick=()=>C('celebrateModal').classList.remove('open');
+C('darkToggle').onchange=()=>{document.body.classList.toggle('darkmode',C('darkToggle').checked);localStorage.setItem('jee-dark',C('darkToggle').checked?'1':'0')};
+C('targetDate').value=localStorage.getItem('jee-target-date')||'';C('targetDate').onchange=()=>{localStorage.setItem('jee-target-date',C('targetDate').value);renderCountdown()};
+function renderCountdown(){const v=C('targetDate').value;if(!v){C('countdownText').textContent='Set a target date to see your countdown.';return}const d=new Date(v+'T00:00:00');const diff=Math.ceil((d-new Date())/86400000);C('countdownText').textContent=diff>=0?'🎯 '+diff+' days until your target date.':'Target date passed — set a new one.'}
+C('exportData').onclick=()=>{const data={version:2,exportedAt:new Date().toISOString(),localStorage:Object.fromEntries(Object.entries(localStorage).filter(([k])=>k.startsWith('jee-'))) };const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='jee-tracker-backup.json';a.click();URL.revokeObjectURL(a.href);toast('⬇️ Backup exported.')};
+C('importData').onclick=()=>C('importFile').click();C('importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);Object.entries(d.localStorage||{}).forEach(([k,v])=>localStorage.setItem(k,v));toast('⬆️ Imported. Reloading…');setTimeout(()=>location.reload(),700)}catch(err){toast('Import failed — invalid backup.')}};r.readAsText(f)};
+if(localStorage.getItem('jee-dark')==='1'){C('darkToggle').checked=true;document.body.classList.add('darkmode')}
+const oldUpdate=typeof update==='function'?update:null;
+const observer=new MutationObserver(()=>{renderCommand()});if(C('completion'))observer.observe(C('completion'),{childList:true,subtree:true});
+setInterval(renderCommand,3000);
+renderCommand();
+})();
+</script>
+</body>
+</html>
